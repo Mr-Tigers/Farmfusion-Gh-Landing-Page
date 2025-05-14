@@ -1,0 +1,110 @@
+.page-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary);
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+body.is-transitioning {
+    overflow: hidden;
+}
+
+body.page-loaded .fade-in,
+body.page-loaded .slide-in-left,
+body.page-loaded .slide-in-right,
+body.page-loaded .slide-in-up,
+body.page-loaded .slide-in-down,
+body.page-loaded .zoom-in,
+body.page-loaded .bounce-in {
+    animation-play-state: running;
+}
+
+/* Section transition effects */
+.section-transition {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.section-transition.in-view {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Smooth scrolling for the entire page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Transition between sections */
+section {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Transition for navigation menu items */
+nav ul li {
+    transition: transform 0.3s ease;
+}
+
+nav ul li:hover {
+    transform: translateY(-3px);
+}
+
+/* Transition for mobile menu */
+.mobile-menu-btn {
+    transition: transform 0.3s ease;
+}
+
+.mobile-menu-btn:hover {
+    transform: rotate(90deg);
+}
+
+/* Transition for form elements */
+input, select, textarea {
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.2);
+}
+
+/* Transition for waitlist form */
+.waitlist-form {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.waitlist-form.submitted {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+/* Transition for success message */
+.success-message {
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.success-message.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Media query for reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    .section-transition,
+    section,
+    .page-transition-overlay,
+    html {
+        transition: none !important;
+        animation: none !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmFusion Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .dashboard-container {
+            display: none;
+            padding: 30px;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .table-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        .btn-primary {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+        .btn-primary:hover {
+            background-color: #388E3C;
+            border-color: #388E3C;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo h1 {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .logo span {
+            color: #000;
+        }
+        .badge-role {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+        }
+        .badge-aggregator {
+            background-color: #4CAF50;
+        }
+        .badge-buyer {
+            background-color: #2196F3;
+        }
+        .badge-logistics {
+            background-color: #ff9800; /* Example color for Logistics */
+        }
+        .badge-other {
+            background-color: #9E9E9E;
+        }
+        .timestamp {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Form -->
+    <div class="login-container" id="login-container">
+        <div class="logo">
+            <h1>Farm<span>Fusion</span></h1>
+            <p>Admin Dashboard</p>
+        </div>
+        <div class="alert alert-danger d-none" id="login-error"></div>
+        <form id="login-form">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="container dashboard-container" id="dashboard-container">
+        <div class="header d-flex justify-content-between align-items-center">
+            <div>
+                <h2>FarmFusion Admin Dashboard</h2>
+                <p class="mb-0">Manage waitlist submissions</p>
+            </div>
+            <button id="logout-btn" class="btn btn-outline-light">Logout</button>
+        </div>
+
+        <div class="table-container">
+            <h3 class="mb-4">Waitlist Submissions</h3>
+            <div class="loading" id="loading">
+                <div class="spinner-border text-success" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2">Loading submissions...</p>
+            </div>
+            <div id="submissions-container" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <input type="text" class="form-control me-2" id="search-input" placeholder="Search by name, email, role, country, region...">
+                <button id="export-csv-btn" class="btn btn-success flex-shrink-0">Export CSV</button>
+            </div>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Country</th>
+                                <th>Region</th>
+                                <th>Source</th>
+                                <th>Message</th>
+                                <th>Submitted At</th>
+                            </tr>
+                        </thead>
+                        <tbody id="submissions-table">
+                            <!-- Submissions will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info d-none" id="no-results">
+                    No submissions found matching your search.
+                </div>
+                <div class="alert alert-info d-none" id="no-submissions">
+                    No waitlist submissions yet.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('login-form');
+            const loginContainer = document.getElementById('login-container');
+            const dashboardContainer = document.getElementById('dashboard-container');
+            const loginError = document.getElementById('login-error');
+            const logoutBtn = document.getElementById('logout-btn');
+            const loading = document.getElementById('loading');
+            const submissionsContainer = document.getElementById('submissions-container');
+            const submissionsTable = document.getElementById('submissions-table');
+            const noResults = document.getElementById('no-results');
+            const noSubmissions = document.getElementById('no-submissions');
+            const searchInput = document.getElementById('search-input');
+            const exportCsvBtn = document.getElementById('export-csv-btn'); // Get export button
+            
+            let allSubmissions = [];
+            
+            // Check if user is already logged in
+            const token = localStorage.getItem('farmfusion_admin_token');
+            if (token) {
+                showDashboard();
+                fetchSubmissions();
+            }
+            
+            // Login form submission
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        loginError.textContent = data.error;
+                        loginError.classList.remove('d-none');
+                    } else if (data.token) {
+                        localStorage.setItem('farmfusion_admin_token', data.token);
+                        showDashboard();
+                        fetchSubmissions();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    loginError.textContent = 'An error occurred. Please try again.';
+                    loginError.classList.remove('d-none');
+                });
+            });
+            
+            // Logout button
+            logoutBtn.addEventListener('click', function() {
+                localStorage.removeItem('farmfusion_admin_token');
+                showLogin();
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterSubmissions(searchTerm);
+            });
+
+            // Export CSV button functionality
+            exportCsvBtn.addEventListener('click', function() {
+                const token = localStorage.getItem('farmfusion_admin_token');
+                if (!token) {
+                    alert('Session expired. Please login again.');
+                    showLogin();
+                    return;
+                }
+
+                fetch('/api/admin/submissions/export', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401 || response.status === 403) {
+                            localStorage.removeItem('farmfusion_admin_token');
+                            showLogin();
+                            throw new Error('Session expired. Please login again.');
+                        }
+                        if (response.status === 404) {
+                            alert('No submissions found to export.');
+                            throw new Error('No submissions found to export.');
+                        }
+                        throw new Error('Failed to export submissions');
+                    }
+                    return response.blob(); // Get the response as a Blob
+                })
+                .then(blob => {
+                    // Create a link element to trigger the download
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    // Set the filename for the download
+                    a.download = 'farmfusion_waitlist_submissions.csv';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(error => {
+                    console.error('Export Error:', error);
+                    if (error.message !== 'No submissions found to export.') {
+                         alert('An error occurred during export. Please try again.');
+                    }
+                });
+            });
+            
+            // Show dashboard
+            function showDashboard() {
+                loginContainer.style.display = 'none';
+                dashboardContainer.style.display = 'block';
+            }
+            
+            // Show login
+            function showLogin() {
+                dashboardContainer.style.display = 'none';
+                loginContainer.style.display = 'block';
+                loginForm.reset();
+                loginError.classList.add('d-none');
+            }
+            
+            // Fetch submissions
+            function fetchSubmissions() {
+                loading.classList.remove('d-none');
+                submissionsContainer.classList.add('d-none');
+                
+                const token = localStorage.getItem('farmfusion_admin_token');
+                
+                fetch('/api/admin/submissions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 401 || response.status === 403) {
+                            localStorage.removeItem('farmfusion_admin_token');
+                            showLogin();
+                            throw new Error('Session expired. Please login again.');
+                        }
+                        throw new Error('Failed to fetch submissions');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    allSubmissions = data.submissions;
+                    renderSubmissions(allSubmissions);
+                    
+                    loading.classList.add('d-none');
+                    submissionsContainer.classList.remove('d-none');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    loading.classList.add('d-none');
+                });
+            }
+            
+            // Render submissions (Updated for new columns)
+            function renderSubmissions(submissions) {
+                submissionsTable.innerHTML = '';
+                
+                if (submissions.length === 0) {
+                    noSubmissions.classList.remove('d-none');
+                    noResults.classList.add('d-none'); // Hide no results message if no submissions exist
+                    return;
+                }
+                
+                noSubmissions.classList.add('d-none');
+                
+                submissions.forEach(submission => {
+                    const row = document.createElement('tr');
+                    
+                    // Format date
+                    const date = new Date(submission.submitted_at);
+                    const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                    
+                    // Role badge class
+                    let badgeClass = 'badge-other';
+                    if (submission.role === 'Farm aggregator') {
+                        badgeClass = 'badge-aggregator';
+                    } else if (submission.role === 'Buyer') {
+                        badgeClass = 'badge-buyer';
+                    } else if (submission.role === 'Logistics Provider') {
+                        badgeClass = 'badge-logistics';
+                    }
+                    
+                    row.innerHTML = `
+                        <td>${submission.id}</td>
+                        <td>${submission.name || '-'}</td>
+                        <td>${submission.phone_number || '-'}</td>
+                        <td>${submission.email ? `<a href="mailto:${submission.email}">${submission.email}</a>` : '-'}</td>
+                        <td><span class="badge ${badgeClass} badge-role">${submission.role || '-'}</span></td>
+                        <td>${submission.country || '-'}</td>
+                        <td>${submission.region || '-'}</td>
+                        <td>${submission.source || '-'}</td>
+                        <td>${submission.message || '-'}</td>
+                        <td><span class="timestamp">${formattedDate}</span></td>
+                    `;
+                    
+                    submissionsTable.appendChild(row);
+                });
+            }
+            
+            // Filter submissions (Updated for new columns)
+            function filterSubmissions(searchTerm) {
+                if (!searchTerm) {
+                    renderSubmissions(allSubmissions);
+                    noResults.classList.add('d-none');
+                    return;
+                }
+                
+                const filtered = allSubmissions.filter(submission => {
+                    return (
+                        (submission.name && submission.name.toLowerCase().includes(searchTerm)) ||
+                        (submission.email && submission.email.toLowerCase().includes(searchTerm)) ||
+                        (submission.phone_number && submission.phone_number.toLowerCase().includes(searchTerm)) ||
+                        (submission.role && submission.role.toLowerCase().includes(searchTerm)) ||
+                        (submission.country && submission.country.toLowerCase().includes(searchTerm)) ||
+                        (submission.region && submission.region.toLowerCase().includes(searchTerm)) ||
+                        (submission.source && submission.source.toLowerCase().includes(searchTerm)) ||
+                        (submission.message && submission.message.toLowerCase().includes(searchTerm))
+                    );
+                });
+                
+                renderSubmissions(filtered);
+                
+                if (filtered.length === 0 && allSubmissions.length > 0) {
+                    noResults.classList.remove('d-none');
+                } else {
+                    noResults.classList.add('d-none');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+

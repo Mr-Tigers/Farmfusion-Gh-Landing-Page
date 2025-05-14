@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm Network Illustration</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #f5f5f5;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="farmNetworkCanvas"></canvas>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('farmNetworkCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            canvas.width = 800;
+            canvas.height = 400;
+            
+            // Farm elements
+            const farms = [];
+            const warehouses = [];
+            const retailers = [];
+            const connections = [];
+            const vehicles = [];
+            
+            // Colors
+            const colors = {
+                background: '#f5f5f5',
+                farm: '#4CAF50',
+                warehouse: '#000000',
+                retailer: '#333333',
+                connection: '#4CAF50',
+                vehicle: '#000000'
+            };
+            
+            // Initialize farms
+            function initFarms() {
+                // Create farms
+                for (let i = 0; i < 5; i++) {
+                    farms.push({
+                        x: Math.random() * (canvas.width * 0.4),
+                        y: Math.random() * canvas.height,
+                        size: 15 + Math.random() * 10,
+                        type: 'farm'
+                    });
+                }
+                
+                // Create warehouses
+                for (let i = 0; i < 3; i++) {
+                    warehouses.push({
+                        x: canvas.width * 0.4 + Math.random() * (canvas.width * 0.2),
+                        y: Math.random() * canvas.height,
+                        size: 20 + Math.random() * 10,
+                        type: 'warehouse'
+                    });
+                }
+                
+                // Create retailers
+                for (let i = 0; i < 7; i++) {
+                    retailers.push({
+                        x: canvas.width * 0.6 + Math.random() * (canvas.width * 0.4),
+                        y: Math.random() * canvas.height,
+                        size: 12 + Math.random() * 8,
+                        type: 'retailer'
+                    });
+                }
+                
+                // Create connections
+                // Farm to warehouse
+                farms.forEach(farm => {
+                    warehouses.forEach(warehouse => {
+                        if (Math.random() > 0.5) {
+                            connections.push({
+                                from: farm,
+                                to: warehouse,
+                                active: Math.random() > 0.7
+                            });
+                        }
+                    });
+                });
+                
+                // Warehouse to retailer
+                warehouses.forEach(warehouse => {
+                    retailers.forEach(retailer => {
+                        if (Math.random() > 0.6) {
+                            connections.push({
+                                from: warehouse,
+                                to: retailer,
+                                active: Math.random() > 0.7
+                            });
+                        }
+                    });
+                });
+                
+                // Create vehicles
+                connections.forEach(connection => {
+                    if (Math.random() > 0.7) {
+                        const progress = Math.random();
+                        vehicles.push({
+                            fromX: connection.from.x,
+                            fromY: connection.from.y,
+                            toX: connection.to.x,
+                            toY: connection.to.y,
+                            progress: progress,
+                            speed: 0.001 + Math.random() * 0.002,
+                            connection: connection
+                        });
+                    }
+                });
+            }
+            
+            // Draw farm
+            function drawFarm(farm) {
+                ctx.fillStyle = colors.farm;
+                ctx.beginPath();
+                ctx.arc(farm.x, farm.y, farm.size, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Draw leaf icon
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.ellipse(farm.x - farm.size/4, farm.y, farm.size/3, farm.size/5, Math.PI/4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(farm.x + farm.size/4, farm.y, farm.size/3, farm.size/5, -Math.PI/4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Draw warehouse
+            function drawWarehouse(warehouse) {
+                ctx.fillStyle = colors.warehouse;
+                ctx.beginPath();
+                ctx.rect(warehouse.x - warehouse.size, warehouse.y - warehouse.size, warehouse.size * 2, warehouse.size * 2);
+                ctx.fill();
+                
+                // Draw warehouse icon
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.rect(warehouse.x - warehouse.size/2, warehouse.y - warehouse.size/2, warehouse.size, warehouse.size/3);
+                ctx.rect(warehouse.x - warehouse.size/2, warehouse.y - warehouse.size/6, warehouse.size, warehouse.size/3);
+                ctx.rect(warehouse.x - warehouse.size/2, warehouse.y + warehouse.size/6, warehouse.size, warehouse.size/3);
+                ctx.fill();
+            }
+            
+            // Draw retailer
+            function drawRetailer(retailer) {
+                ctx.fillStyle = colors.retailer;
+                ctx.beginPath();
+                ctx.moveTo(retailer.x, retailer.y - retailer.size);
+                ctx.lineTo(retailer.x + retailer.size, retailer.y);
+                ctx.lineTo(retailer.x, retailer.y + retailer.size);
+                ctx.lineTo(retailer.x - retailer.size, retailer.y);
+                ctx.closePath();
+                ctx.fill();
+                
+                // Draw store icon
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.rect(retailer.x - retailer.size/2, retailer.y - retailer.size/3, retailer.size, retailer.size/1.5);
+                ctx.moveTo(retailer.x - retailer.size/2, retailer.y - retailer.size/3);
+                ctx.lineTo(retailer.x, retailer.y - retailer.size/1.5);
+                ctx.lineTo(retailer.x + retailer.size/2, retailer.y - retailer.size/3);
+                ctx.fill();
+            }
+            
+            // Draw connection
+            function drawConnection(connection) {
+                ctx.strokeStyle = connection.active ? colors.connection : '#cccccc';
+                ctx.lineWidth = connection.active ? 2 : 1;
+                ctx.setLineDash(connection.active ? [] : [5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(connection.from.x, connection.from.y);
+                ctx.lineTo(connection.to.x, connection.to.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+            
+            // Draw vehicle
+            function drawVehicle(vehicle) {
+                const x = vehicle.fromX + (vehicle.toX - vehicle.fromX) * vehicle.progress;
+                const y = vehicle.fromY + (vehicle.toY - vehicle.fromY) * vehicle.progress;
+                
+                // Calculate angle
+                const angle = Math.atan2(vehicle.toY - vehicle.fromY, vehicle.toX - vehicle.fromX);
+                
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(angle);
+                
+                // Draw truck
+                ctx.fillStyle = colors.vehicle;
+                ctx.beginPath();
+                ctx.rect(-10, -5, 20, 10);
+                ctx.rect(-15, -5, 5, 10);
+                ctx.fill();
+                
+                // Draw wheels
+                ctx.fillStyle = '#333';
+                ctx.beginPath();
+                ctx.arc(-8, 5, 3, 0, Math.PI * 2);
+                ctx.arc(8, 5, 3, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            }
+            
+            // Update vehicles
+            function updateVehicles() {
+                vehicles.forEach(vehicle => {
+                    vehicle.progress += vehicle.speed;
+                    if (vehicle.progress > 1) {
+                        vehicle.progress = 0;
+                    }
+                });
+            }
+            
+            // Draw everything
+            function draw() {
+                // Clear canvas
+                ctx.fillStyle = colors.background;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw connections
+                connections.forEach(drawConnection);
+                
+                // Draw farms, warehouses, and retailers
+                farms.forEach(drawFarm);
+                warehouses.forEach(drawWarehouse);
+                retailers.forEach(drawRetailer);
+                
+                // Draw vehicles
+                vehicles.forEach(drawVehicle);
+                
+                // Update vehicles
+                updateVehicles();
+                
+                // Request next frame
+                requestAnimationFrame(draw);
+            }
+            
+            // Initialize and start drawing
+            initFarms();
+            draw();
+            
+            // Export function to get the canvas as an image
+            window.getFarmNetworkImage = function() {
+                return canvas.toDataURL('image/png');
+            };
+        });
+    </script>
+</body>
+</html>

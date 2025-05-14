@@ -1,0 +1,208 @@
+/* Logistics Section Styles */
+.logistics {
+    padding: 100px 0;
+    background-color: var(--gray-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.section-description {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 50px;
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+.logistics-flow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.logistics-step {
+    flex: 1;
+    min-width: 250px;
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px var(--shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.logistics-step:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px var(--shadow);
+    border-top: 3px solid var(--primary);
+}
+
+.logistics-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.logistics-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--secondary);
+    text-align: center;
+}
+
+.logistics-content p {
+    color: var(--text-light);
+    text-align: center;
+}
+
+.logistics-arrow {
+    font-size: 2rem;
+    color: var(--primary);
+    margin: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logistics-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.feature-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px var(--shadow);
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px var(--shadow);
+    border-bottom: 3px solid var(--primary);
+}
+
+.feature-card .feature-icon {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 20px;
+}
+
+.feature-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--secondary);
+}
+
+.feature-card p {
+    color: var(--text-light);
+}
+
+.logistics-cta {
+    text-align: center;
+    background-color: var(--secondary);
+    color: var(--white);
+    padding: 40px;
+    border-radius: 10px;
+    margin-top: 30px;
+    position: relative;
+    z-index: 2;
+}
+
+.logistics-cta h3 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: var(--white);
+}
+
+.logistics-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    opacity: 0.1;
+}
+
+.route-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background-color: var(--primary);
+    transform: translateY(-50%);
+}
+
+.vehicle {
+    position: absolute;
+    font-size: 1.5rem;
+    color: var(--primary);
+    animation: moveVehicle 15s linear infinite;
+}
+
+.vehicle-1 {
+    top: 30%;
+    animation-delay: 0s;
+}
+
+.vehicle-2 {
+    top: 50%;
+    animation-delay: 5s;
+}
+
+.vehicle-3 {
+    top: 70%;
+    animation-delay: 10s;
+}
+
+@keyframes moveVehicle {
+    0% {
+        left: -50px;
+    }
+    100% {
+        left: calc(100% + 50px);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .logistics-flow {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .logistics-arrow {
+        transform: rotate(90deg);
+        margin: 20px 0;
+    }
+    
+    .logistics-step {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .logistics {
+        padding: 60px 0;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .logistics-features {
+        grid-template-columns: 1fr;
+    }
+}

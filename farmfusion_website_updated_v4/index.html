@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmFusion - Join the Waitlist</title>
+    <meta name="description" content="FarmFusion - Revolutionizing Agriculture: The Digital Marketplace Where Fresh Produce Meets Retail Demand. Join our waitlist for early access.">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="3d-animation.css">
+    <link rel="stylesheet" href="hero-styles.css">
+    <link rel="stylesheet" href="advanced-features.css">
+    <link rel="stylesheet" href="animations.css">
+    <link rel="stylesheet" href="page-transitions.css">
+    <link rel="stylesheet" href="responsive-animations.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous" defer></script>
+    <!-- Add Three.js for 3D animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Add GSAP for advanced animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script src="script.js" defer></script>
+    <script src="language-switcher.js" defer></script>
+    <script src="page-transitions.js" defer></script>
+    <script src="animation-optimizer.js" defer></script>
+</head>
+<body>
+    <header class="fade-in">
+        <div class="container">
+            <div class="logo hover-grow">
+                <img src="logo.png" alt="FarmFusion Logo">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#about" class="nav-link" data-translate="about">About</a></li>
+                    <li><a href="#how-it-works" class="nav-link" data-translate="howItWorks">How It Works</a></li>
+                    <li><a href="#contact" class="nav-link" data-translate="contact">Contact</a></li>
+                    <li class="language-selector">
+                        <span class="language-option active" data-lang="en" data-translate="langEn">EN</span>
+                        <span class="language-option" data-lang="fr" data-translate="langFr">FR</span>
+                    </li>
+                </ul>
+                <button id="mobile-menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero section-transition" id="about">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="slide-in-left" data-translate="heroTitle">Connecting Farm Aggregators with Buyers</h2>
+                <p class="slide-in-right" data-translate="heroSubtitle">Uniting Africa through Intra-continental Trade</p>
+                <a href="#waitlist" class="btn primary-btn pulse hover-lift" data-translate="joinWaitlist">Join the Waitlist</a>
+            </div>
+            <div class="hero-illustration float">
+                <div class="farm-network-container zoom-in">
+                    <iframe src="farm-network-illustration.html" frameborder="0" class="farm-network-iframe"></iframe>
+                </div>
+            </div>
+        </div>
+        <div class="hero-particles" id="particles-js"></div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title slide-in-up" data-translate="whyChoose">Why Choose FarmFusion?</h2>
+            <div class="features-grid">
+                <div class="feature-card aggregator hover-lift">
+                    <h3 data-translate="forAggregators">For Aggregators</h3>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 data-translate="expandMarket">Expand Your Market Reach</h4>
+                            <p data-translate="expandMarketDesc">Connect with buyers across the country and grow your distribution network.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 data-translate="streamlineOrder">Streamline Order Management</h4>
+                            <p data-translate="streamlineOrderDesc">Manage all your orders in one place with our intuitive dashboard.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 data-translate="reliablePayment">Reliable Payment Processing</h4>
+                            <p data-translate="reliablePaymentDesc">Get paid on time with our secure payment system.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-card retailer hover-lift">
+                    <h3 data-translate="forBuyers">For Buyers</h3>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-carrot"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 data-translate="accessProducts">Access to Diverse Farm Products</h4>
+                            <p data-translate="accessProductsDesc">Browse and order from a wide variety of fresh farm products.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 data-translate="qualityAssurance">Quality Assurance</h4>
+                            <p data-translate="qualityAssuranceDesc">All products on our platform meet strict quality standards.</p>
+                        </div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="feature-text">
+                            <h4 data-translate="simplifiedProcess">Simplified Procurement Process</h4>
+                            <p data-translate="simplifiedProcessDesc">Order directly from aggregators with just a few clicks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tech-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+    </section>
+
+    <section class="how-it-works section-transition" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title slide-in-up" data-translate="howItWorksTitle">How It Works</h2>
+            <div class="process-container">
+                <div class="process-group">
+                    <h3 data-translate="aggregatorStepsTitle">For Aggregators</h3>
+                    <div class="process-steps">
+                        <div class="process-step slide-in-left">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4 data-translate="signUp">Sign up and create your profile</h4>
+                                <p data-translate="signUpDesc">Complete your business profile with details about your farm products and services.</p>
+                            </div>
+                        </div>
+                        <div class="process-step slide-in-left" style="animation-delay: 0.2s;">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4 data-translate="listProducts">List your available farm products</h4>
+                                <p data-translate="listProductsDesc">Add your inventory with prices, quantities, and quality specifications.</p>
+                            </div>
+                        </div>
+                        <div class="process-step slide-in-left" style="animation-delay: 0.4s;">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4 data-translate="receiveOrders">Receive and fulfill orders</h4>
+                                <p data-translate="receiveOrdersDesc">Get notified of new orders and manage fulfillment through our platform.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="process-group">
+                    <h3 data-translate="buyerStepsTitle">For Buyers</h3>
+                    <div class="process-steps">
+                        <div class="process-step slide-in-right">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4 data-translate="browseProducts">Browse available farm products</h4>
+                                <p data-translate="browseProductsDesc">Search and filter products based on your specific requirements.</p>
+                            </div>
+                        </div>
+                        <div class="process-step slide-in-right" style="animation-delay: 0.2s;">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4 data-translate="placeOrders">Place orders directly with aggregators</h4>
+                                <p data-translate="placeOrdersDesc">Select products, specify quantities, and submit your order.</p>
+                            </div>
+                        </div>
+                        <div class="process-step slide-in-right" style="animation-delay: 0.4s;">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4 data-translate="trackDeliveries">Track deliveries and manage inventory</h4>
+                                <p data-translate="trackDeliveriesDesc">Monitor order status and keep track of your inventory in real-time.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tech-grid">
+            <div class="grid-line horizontal-line-1"></div>
+            <div class="grid-line horizontal-line-2"></div>
+            <div class="grid-line vertical-line-1"></div>
+            <div class="grid-line vertical-line-2"></div>
+        </div>
+    </section>
+
+    <section class="logistics section-transition" id="logistics">
+        <div class="container">
+            <h2 class="section-title slide-in-up" data-translate="logisticsTitle">Our Logistics Network</h2>
+            <p class="section-description slide-in-up" style="animation-delay: 0.2s;" data-translate="logisticsDesc">Efficiently connecting farms to buyers through our advanced logistics network</p>
+            
+            <div class="logistics-flow">
+                <div class="logistics-step slide-in-left">
+                    <div class="logistics-icon">
+                        <i class="fas fa-tractor"></i>
+                    </div>
+                    <div class="logistics-content">
+                        <h3 data-translate="farmCollection">Farm Collection</h3>
+                        <p data-translate="farmCollectionDesc">Our network of vehicles collects fresh produce directly from farm aggregators, ensuring quality preservation from the first mile.</p>
+                    </div>
+                </div>
+                
+                <div class="logistics-arrow pulse">
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                </div>
+                
+                <div class="logistics-step slide-in-up">
+                    <div class="logistics-icon">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <div class="logistics-content">
+                        <h3 data-translate="centralProcessing">Central Processing</h3>
+                        <p data-translate="centralProcessingDesc">Products are sorted, quality-checked, and prepared for distribution at our central facilities, maintaining the cold chain where necessary.</p>
+                    </div>
+                </div>
+                
+                <div class="logistics-arrow pulse">
+                    <i class="fas fa-long-arrow-alt-right"></i>
+                </div>
+                
+                <div class="logistics-step slide-in-right">
+                    <div class="logistics-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="logistics-content">
+                        <h3 data-translate="lastMileDelivery">Last-Mile Delivery</h3>
+                        <p data-translate="lastMileDeliveryDesc">Our dedicated fleet ensures timely delivery to buyers, with real-time tracking and flexible scheduling options.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="logistics-features">
+                <div class="feature-card hover-lift">
+                    <div class="feature-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h4 data-translate="timeEfficient">Time-Efficient</h4>
+                    <p data-translate="timeEfficientDesc">Optimized routes and scheduling reduce transit time from farm to buyer.</p>
+                </div>
+                
+                <div class="feature-card hover-lift" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h4 data-translate="freshnessGuaranteed">Freshness Guaranteed</h4>
+                    <p data-translate="freshnessGuaranteedDesc">Temperature-controlled vehicles preserve product quality throughout transport.</p>
+                </div>
+                
+                <div class="feature-card hover-lift" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h4 data-translate="realTimeTracking">Real-Time Tracking</h4>
+                    <p data-translate="realTimeTrackingDesc">Monitor your deliveries with our advanced GPS tracking system.</p>
+                </div>
+                
+                <div class="feature-card hover-lift" style="animation-delay: 0.6s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-recycle"></i>
+                    </div>
+                    <h4 data-translate="sustainablePractices">Sustainable Practices</h4>
+                    <p data-translate="sustainablePracticesDesc">Eco-friendly packaging and optimized routes reduce our carbon footprint.</p>
+                </div>
+            </div>
+            
+            <div class="logistics-cta">
+                <h3 class="slide-in-up" data-translate="logisticsCTA">Experience seamless farm-to-buyer logistics</h3>
+                <a href="#waitlist" class="btn primary-btn pulse hover-lift" data-translate="joinWaitlist">Join the Waitlist</a>
+            </div>
+        </div>
+        
+        <div class="logistics-background">
+            <div class="route-line"></div>
+            <div class="vehicle vehicle-1"><i class="fas fa-truck"></i></div>
+            <div class="vehicle vehicle-2"><i class="fas fa-truck"></i></div>
+            <div class="vehicle vehicle-3"><i class="fas fa-truck"></i></div>
+        </div>
+    </section>
+
+    <!-- Advanced Features Section -->
+    <section class="advanced-features" id="advanced-features">
+        <div class="container">
+            <h2 class="section-title animate-fadeIn" data-translate="advancedFeaturesTitle">Advanced Platform Features</h2>
+            <p class="section-description" data-translate="advancedFeaturesDesc">Empowering agricultural trade with cutting-edge technology</p>
+            
+            <div class="features-grid">
+                <div class="feature-card animate-fadeInUp">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck-moving"></i>
+                    </div>
+                    <h4 data-translate="realTimeOrderTracking">Real-Time Order Tracking</h4>
+                    <p data-translate="realTimeOrderTrackingDesc">Monitor your orders from placement to delivery, providing transparency and building trust. Track shipments, receive timely updates, and plan accordingly.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.1s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h4 data-translate="integratedLogistics">Integrated Logistics Solutions</h4>
+                    <p data-translate="integratedLogisticsDesc">Seamless coordination between distributors and logistics providers. Optimize delivery routes, reduce transit times, and minimize post-harvest losses.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.2s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 data-translate="dynamicPricing">Dynamic Pricing and Market Insights</h4>
+                    <p data-translate="dynamicPricingDesc">Access real-time market data and pricing trends to help make informed decisions. Respond swiftly to market fluctuations, enhancing profitability.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.3s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4 data-translate="qualityAssuranceVerification">Quality Assurance and Verification</h4>
+                    <p data-translate="qualityAssuranceVerificationDesc">Systems for quality checks and certifications, ensuring products meet specified standards. Build confidence among buyers regarding quality and safety.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.4s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <h4 data-translate="inventoryManagement">Inventory and Supply Chain Management</h4>
+                    <p data-translate="inventoryManagementDesc">Tools to manage inventory levels, forecast demand, and streamline supply chain operations. Reduce waste and ensure product availability.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.5s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-language"></i>
+                    </div>
+                    <h4 data-translate="multilingualSupport">Multilingual and Multi-Currency Support</h4>
+                    <p data-translate="multilingualSupportDesc">Support for multiple languages and currencies, facilitating cross-border trade and inclusivity across the African continent.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.6s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h4 data-translate="mobileAccessibility">Mobile Accessibility</h4>
+                    <p data-translate="mobileAccessibilityDesc">Mobile-friendly platform allowing users in remote areas to access services, place orders, and track deliveries via smartphones.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.7s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h4 data-translate="securePayment">Secure Payment Gateway Integration</h4>
+                    <p data-translate="securePaymentDesc">Reliable and secure payment systems to facilitate smooth transactions, including options like mobile money and bank transfers.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.8s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h4 data-translate="personalizedNotifications">Personalized Notifications and Alerts</h4>
+                    <p data-translate="personalizedNotificationsDesc">Customized notifications about order statuses, market trends, and promotional offers, enhancing user engagement and experience.</p>
+                </div>
+                
+                <div class="feature-card animate-fadeInUp" style="animation-delay: 0.9s;">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h4 data-translate="reportingAnalytics">Comprehensive Reporting and Analytics</h4>
+                    <p data-translate="reportingAnalyticsDesc">Detailed reports and analytics on sales, deliveries, and market performance to aid in strategic planning and decision-making.</p>
+                </div>
+            </div>
+            
+            <div class="advanced-features-cta">
+                <h3 class="animate-fadeInUp" data-translate="experienceFuture">Experience the future of agricultural trade</h3>
+                <a href="#waitlist" class="btn primary-btn pulse hover-lift" data-translate="joinWaitlist">Join the Waitlist</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials section-transition">
+        <div class="container">
+            <h2 class="section-title slide-in-up" data-translate="testimonialsTitle">Join These Satisfied Partners on FarmFusion</h2>
+            <div class="testimonial-placeholder">
+                <p data-translate="comingSoon">Testimonials coming soon after launch!</p>
+                <p data-translate="beAmongFirst">Be among the first to experience the benefits of our platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="waitlist section-transition" id="waitlist">
+        <div class="container">
+            <h2 class="section-title slide-in-up" data-translate="waitlistTitle">Join the Waitlist for Early Access</h2>
+            <p class="section-description slide-in-up" data-translate="waitlistDesc">Be the first to know when FarmFusion launches and get exclusive early access.</p>
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf-dHS09OQBlflQn6YSjgFHrjhI2AQDNu0B61rsRDhE2fEy2A/viewform?usp=sharing" target="_blank" class="btn primary-btn pulse hover-lift" data-translate="getEarlyAccess">Get Early Access</a>
+            <div id="form-success" style="display: none;">
+                <h3 data-translate="thankYou">Thank You for Joining Our Waitlist!</h3>
+                <p data-translate="confirmation">We've received your information and will contact you when FarmFusion is ready for early access.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <img src="logo.png" alt="FarmFusion Logo">
+                    <p data-translate="footerSlogan">Connecting Farm Aggregators with Buyers</p>
+                </div>
+                <div class="footer-links">
+                    <h4 data-translate="quickLinks">Quick Links</h4>
+                    <ul>
+                        <li><a href="#about" data-translate="about">About</a></li>
+                        <li><a href="#how-it-works" data-translate="howItWorks">How It Works</a></li>
+                        <li><a href="#waitlist" data-translate="joinWaitlist">Join Waitlist</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4 data-translate="contactUs">Contact Us</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> <span data-translate="address">Accra, Ghana</span></p>
+                    <p><i class="fas fa-phone"></i> <span data-translate="phone1">+233-243-474-526</span></p>
+                    <p><i class="fas fa-phone"></i> <span data-translate="phone2">+233-537-370-147</span></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:Farmfusiongh@gmail.com" data-translate="emailFooter">Farmfusiongh@gmail.com</a></p>
+                    <div class="social-icons">
+                        <a href="https://www.linkedin.com/company/farmfusion-ghana" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://www.instagram.com/farmfusion_gh" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-translate="allRightsReserved">© 2025 FarmFusion. All rights reserved.</p>
+                <p>
+                    <a href="#" data-translate="privacyPolicy">Privacy Policy</a> | 
+                    <a href="#" data-translate="termsOfService">Terms of Service</a>
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
+

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FarmFusion 3D Animation Demo</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+        
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        .animation-container {
+            width: 800px;
+            height: 500px;
+            max-width: 90vw;
+            max-height: 70vh;
+            position: relative;
+            border: 2px solid #4CAF50;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        #animation-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        button:hover {
+            background-color: #388E3C;
+        }
+        
+        .description {
+            margin-top: 20px;
+            max-width: 800px;
+            text-align: center;
+            z-index: 10;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>FarmFusion 3D Animation Demo</h1>
+        <div class="animation-container">
+            <div id="animation-canvas"></div>
+        </div>
+        <div class="controls">
+            <button id="speed-down">Slow Down</button>
+            <button id="speed-up">Speed Up</button>
+            <button id="toggle-rotation">Toggle Rotation</button>
+        </div>
+        <div class="description">
+            <p>This demo shows the 3D animation that will be integrated into the FarmFusion landing page hero section.</p>
+            <p>It visualizes the connection between farm aggregators and retailers through a network of farm plots and distribution lines.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up Three.js scene
+            const container = document.getElementById('animation-canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            // Create a farm-themed 3D model
+            // Main earth/globe representing the marketplace
+            const globeGeometry = new THREE.SphereGeometry(3, 64, 64);
+            const globeMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x4CAF50,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.7
+            });
+            const globe = new THREE.Mesh(globeGeometry, globeMaterial);
+            scene.add(globe);
+
+            // Add outer glow sphere
+            const glowGeometry = new THREE.SphereGeometry(3.2, 32, 32);
+            const glowMaterial = new THREE.MeshBasicMaterial({ 
+                color: 0x4CAF50,
+                transparent: true,
+                opacity: 0.1,
+                side: THREE.BackSide
+            });
+            const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+            scene.add(glow);
+
+            // Create farm plots on the globe (small cubes representing farm areas)
+            const farmGroup = new THREE.Group();
+            for (let i = 0; i < 20; i++) {
+                // Create random positions on the sphere
+                const phi = Math.acos(-1 + (2 * Math.random()));
+                const theta = 2 * Math.PI * Math.random();
+                
+                const x = 3 * Math.sin(phi) * Math.cos(theta);
+                const y = 3 * Math.sin(phi) * Math.sin(theta);
+                const z = 3 * Math.cos(phi);
+                
+                // Create a small cube to represent a farm
+                const farmGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.1);
+                const farmMaterial = new THREE.MeshBasicMaterial({ 
+                    color: 0x000000,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const farm = new THREE.Mesh(farmGeometry, farmMaterial);
+                
+                // Position the farm on the globe surface
+                farm.position.set(x, y, z);
+                
+                // Orient the farm to face outward from the center
+                farm.lookAt(0, 0, 0);
+                farm.rotateX(Math.PI / 2); // Rotate to lie flat on the surface
+                
+                farmGroup.add(farm);
+            }
+            scene.add(farmGroup);
+
+            // Create connection lines between farms (representing the marketplace connections)
+            const connectionGroup = new THREE.Group();
+            const lineMaterial = new THREE.LineBasicMaterial({ 
+                color: 0x4CAF50,
+                transparent: true,
+                opacity: 0.4
+            });
+            
+            // Connect some random farms
+            for (let i = 0; i < 15; i++) {
+                const farm1 = farmGroup.children[Math.floor(Math.random() * farmGroup.children.length)];
+                const farm2 = farmGroup.children[Math.floor(Math.random() * farmGroup.children.length)];
+                
+                if (farm1 !== farm2) {
+                    const lineGeometry = new THREE.BufferGeometry().setFromPoints([
+                        farm1.position.clone().multiplyScalar(1.05), // Slightly above surface
+                        farm2.position.clone().multiplyScalar(1.05)
+                    ]);
+                    const line = new THREE.Line(lineGeometry, lineMaterial);
+                    connectionGroup.add(line);
+                }
+            }
+            scene.add(connectionGroup);
+
+            // Add logistics elements - trucks and routes
+            const logisticsGroup = new THREE.Group();
+            
+            // Create truck-like objects
+            for (let i = 0; i < 5; i++) {
+                // Truck body
+                const truckBodyGeometry = new THREE.BoxGeometry(0.4, 0.2, 0.2);
+                const truckMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
+                const truckBody = new THREE.Mesh(truckBodyGeometry, truckMaterial);
+                
+                // Truck cabin
+                const truckCabinGeometry = new THREE.BoxGeometry(0.2, 0.2, 0.2);
+                const truckCabin = new THREE.Mesh(truckCabinGeometry, truckMaterial);
+                truckCabin.position.x = -0.3;
+                
+                // Create a truck group
+                const truck = new THREE.Group();
+                truck.add(truckBody);
+                truck.add(truckCabin);
+                
+                // Position the truck randomly around the globe
+                const distance = 4.5;
+                const phi = Math.acos(-1 + (2 * Math.random()));
+                const theta = 2 * Math.PI * Math.random();
+                
+                truck.position.x = distance * Math.sin(phi) * Math.cos(theta);
+                truck.position.y = distance * Math.sin(phi) * Math.sin(theta);
+                truck.position.z = distance * Math.cos(phi);
+                
+                // Orient the truck to face tangent to the globe
+                truck.lookAt(0, 0, 0);
+                truck.rotateY(Math.PI / 2); // Rotate to face direction of travel
+                
+                // Add to logistics group
+                logisticsGroup.add(truck);
+                
+                // Add a path for the truck
+                const pathPoints = [];
+                const pathSegments = 20;
+                const startTheta = theta;
+                
+                for (let j = 0; j <= pathSegments; j++) {
+                    const pathTheta = startTheta + (j / pathSegments) * Math.PI / 2;
+                    const pathX = distance * Math.sin(phi) * Math.cos(pathTheta);
+                    const pathY = distance * Math.sin(phi) * Math.sin(pathTheta);
+                    const pathZ = distance * Math.cos(phi);
+                    pathPoints.push(new THREE.Vector3(pathX, pathY, pathZ));
+                }
+                
+                const pathGeometry = new THREE.BufferGeometry().setFromPoints(pathPoints);
+                const pathMaterial = new THREE.LineBasicMaterial({ 
+                    color: 0xFFFFFF,
+                    transparent: true,
+                    opacity: 0.3
+                });
+                const path = new THREE.Line(pathGeometry, pathMaterial);
+                logisticsGroup.add(path);
+            }
+            scene.add(logisticsGroup);
+
+            // Add some floating icons representing farm products and retail
+            const iconGroup = new THREE.Group();
+            const iconGeometries = [
+                new THREE.SphereGeometry(0.2, 16, 16), // Fruit
+                new THREE.ConeGeometry(0.2, 0.4, 16),  // Carrot
+                new THREE.BoxGeometry(0.3, 0.3, 0.3)   // Package
+            ];
+            
+            for (let i = 0; i < 15; i++) {
+                const iconGeometry = iconGeometries[Math.floor(Math.random() * iconGeometries.length)];
+                const iconMaterial = new THREE.MeshBasicMaterial({ 
+                    color: i % 2 === 0 ? 0x4CAF50 : 0xFFFFFF,
+                    transparent: true,
+                    opacity: 0.8
+                });
+                const icon = new THREE.Mesh(iconGeometry, iconMaterial);
+                
+                // Position randomly around the globe
+                const distance = 5 + Math.random() * 2;
+                const phi = Math.acos(-1 + (2 * Math.random()));
+                const theta = 2 * Math.PI * Math.random();
+                
+                icon.position.x = distance * Math.sin(phi) * Math.cos(theta);
+                icon.position.y = distance * Math.sin(phi) * Math.sin(theta);
+                icon.position.z = distance * Math.cos(phi);
+                
+                // Add to group
+                iconGroup.add(icon);
+            }
+            scene.add(iconGroup);
+
+            // Position camera
+            camera.position.z = 10;
+
+            // Animation variables
+            let rotationSpeed = 0.005;
+            let iconMovementAmplitude = 0.05;
+            let time = 0;
+            let rotationEnabled = true;
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                time += 0.01;
+                
+                if (rotationEnabled) {
+                    // Rotate the globe
+                    globe.rotation.y += rotationSpeed;
+                    glow.rotation.y += rotationSpeed * 0.7;
+                    farmGroup.rotation.y += rotationSpeed;
+                    connectionGroup.rotation.y += rotationSpeed;
+                    logisticsGroup.rotation.y += rotationSpeed;
+                }
+                
+                // Pulse the glow
+                const pulseScale = 1 + 0.05 * Math.sin(time);
+                glow.scale.set(pulseScale, pulseScale, pulseScale);
+                
+                // Move the icons in a floating pattern
+                iconGroup.children.forEach((icon, index) => {
+                    icon.position.y += Math.sin(time + index * 0.5) * iconMovementAmplitude;
+                    icon.rotation.y += 0.01;
+                    icon.rotation.x += 0.005;
+                });
+                
+                // Animate trucks along their paths
+                logisticsGroup.children.forEach((object, index) => {
+                    if (object instanceof THREE.Group) { // It's a truck
+                        // Move truck along its path
+                        const truckSpeed = 0.005;
+                        const pathPosition = (time * truckSpeed + index * 0.2) % 1;
+                        
+                        // Calculate position along the path
+                        const phi = Math.acos(-1 + (2 * Math.random()));
+                        const theta = 2 * Math.PI * pathPosition;
+                        const distance = 4.5;
+                        
+                        object.position.x = distance * Math.sin(phi) * Math.cos(theta);
+                        object.position.y = distance * Math.sin(phi) * Math.sin(theta);
+                        object.position.z = distance * Math.cos(phi);
+                        
+                        // Orient the truck
+                        object.lookAt(0, 0, 0);
+                        object.rotateY(Math.PI / 2);
+                    }
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+
+            // Controls
+            document.getElementById('speed-down').addEventListener('click', function() {
+                rotationSpeed = Math.max(0.001, rotationSpeed - 0.002);
+                iconMovementAmplitude = Math.max(0.01, iconMovementAmplitude - 0.02);
+            });
+            
+            document.getElementById('speed-up').addEventListener('click', function() {
+                rotationSpeed = Math.min(0.02, rotationSpeed + 0.002);
+                iconMovementAmplitude = Math.min(0.2, iconMovementAmplitude + 0.02);
+            });
+            
+            document.getElementById('toggle-rotation').addEventListener('click', function() {
+                rotationEnabled = !rotationEnabled;
+                this.textContent = rotationEnabled ? 'Pause Rotation' : 'Resume Rotation';
+            });
+        });
+    </script>
+</body>
+</html>
